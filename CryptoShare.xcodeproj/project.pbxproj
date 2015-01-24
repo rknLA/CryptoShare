@@ -21,6 +21,7 @@
 		0AE32FA51A744DEB000BEE45 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE32FA41A744DEB000BEE45 /* QuartzCore.framework */; };
 		0AE32FA71A744DF5000BEE45 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE32FA61A744DF5000BEE45 /* libc++.dylib */; };
 		0AE32FA91A744DFD000BEE45 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE32FA81A744DFD000BEE45 /* libz.dylib */; };
+		0AE32FAD1A744FDF000BEE45 /* MainTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32FAC1A744FDF000BEE45 /* MainTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		0AE32FA41A744DEB000BEE45 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		0AE32FA61A744DF5000BEE45 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		0AE32FA81A744DFD000BEE45 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		0AE32FAB1A744FDF000BEE45 /* MainTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainTableViewController.h; sourceTree = "<group>"; };
+		0AE32FAC1A744FDF000BEE45 /* MainTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainTableViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +149,8 @@
 			children = (
 				0AE32F7B1A744D96000BEE45 /* SplashViewController.h */,
 				0AE32F7C1A744D96000BEE45 /* SplashViewController.m */,
+				0AE32FAB1A744FDF000BEE45 /* MainTableViewController.h */,
+				0AE32FAC1A744FDF000BEE45 /* MainTableViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -271,6 +276,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AE32FAD1A744FDF000BEE45 /* MainTableViewController.m in Sources */,
 				0AE32F7D1A744D96000BEE45 /* SplashViewController.m in Sources */,
 				0AE32F7A1A744D96000BEE45 /* AppDelegate.m in Sources */,
 				0AE32F771A744D96000BEE45 /* main.m in Sources */,

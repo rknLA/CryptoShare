@@ -10,6 +10,7 @@
 
 #import <Dropbox/Dropbox.h>
 
+#import "MainTableViewController.h"
 #import "SplashViewController.h"
 
 @interface AppDelegate ()
@@ -24,11 +25,6 @@
 
     DBAccountManager *accountManager = [[DBAccountManager alloc] initWithAppKey:@"APP_KEY" secret:@"APP_SECRET"];
     [DBAccountManager setSharedManager:accountManager];
-
-
-    if ([[DBAccountManager sharedManager] linkedAccount] == nil) {
-
-    }
 
     return YES;
 }
@@ -62,6 +58,8 @@
     DBAccount *account = [[DBAccountManager sharedManager] handleOpenURL:url];
     if (account) {
         NSLog(@"App linked successfully!");
+        UINavigationController *mainView = (UINavigationController *)self.window.rootViewController;
+        [mainView dismissViewControllerAnimated:YES completion:nil];
         return YES;
     }
     return NO;
