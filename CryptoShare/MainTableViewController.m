@@ -10,7 +10,22 @@
 
 #import <Dropbox/Dropbox.h>
 
+#import "CryptoManager.h"
+
 @implementation MainTableViewController
+
+#pragma mark - View Lifecycle
+
+- (void)viewDidLoad
+{
+    [self.navigationItem setTitle:@"CryptoShare"];
+
+    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                                               target:self
+                                                                               action:@selector(addEncryptedItem)];
+    self.navigationItem.rightBarButtonItem = addButton;
+
+}
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -19,7 +34,21 @@
         UIViewController *connectDropboxVC = [theStoryboard instantiateViewControllerWithIdentifier:@"connectDropbox"];
 
         [self presentViewController:connectDropboxVC animated:YES completion:nil];
+    } else {
+
     }
+}
+
+#pragma mark - Dropbox Data
+- (void)populate
+
+
+#pragma mark - UI Handlers
+
+- (void)addEncryptedItem
+{
+    NSLog(@"Should add item");
+    
 }
 
 @end
