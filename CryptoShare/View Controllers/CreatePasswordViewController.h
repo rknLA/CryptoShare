@@ -10,4 +10,8 @@
 
 @interface CreatePasswordViewController : UIViewController
 
+@property (nonatomic, weak) IBOutlet UITextField *passwordEntry;
+
+- (IBAction)passwordEntryCompleted:(id)sender;
+
 @end

@@ -10,4 +10,10 @@
 
 @implementation CreatePasswordViewController
 
+
+- (IBAction)passwordEntryCompleted:(id)sender
+{
+    NSLog(@"Done entering password");
+}
+
 @end

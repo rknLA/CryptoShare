@@ -28,8 +28,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    UIStoryboard *theStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     if ([[DBAccountManager sharedManager] linkedAccount] == nil) {
-        UIStoryboard *theStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UIViewController *connectDropboxVC = [theStoryboard instantiateViewControllerWithIdentifier:@"connectDropbox"];
 
         [self presentViewController:connectDropboxVC animated:YES completion:nil];
@@ -39,7 +39,8 @@
     DBCryptoSession *cryptoSession = [DBCryptoSession beginSession];
 
     if (cryptoSession.state == DBCryptoSessionStateUnconfigured) {
-        
+        UIViewController *setPasswordVC = [theStoryboard instantiateViewControllerWithIdentifier:@"createPassword"];
+        [self presentViewController:setPasswordVC animated:YES completion:nil];
     }
 }
 

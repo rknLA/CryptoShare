@@ -75,7 +75,7 @@ static DBCryptoSession *_cryptoSession;
     DBError *dbErr;
     DBFileInfo *packageInfo = [[DBFilesystem sharedFilesystem] fileInfoForPath:packagePath error:&dbErr];
     
-    if (packageInfo == nil && [dbErr code] == DBErrorNotFound) {
+    if (packageInfo == nil || [dbErr code] == DBErrorNotFound) {
         [self createMainPackage];
     } else {
         [self loadAuthDictionary];
