@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0AA607471A7539B90003D7A4 /* CreatePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA607461A7539B90003D7A4 /* CreatePasswordViewController.m */; };
 		0AE32F771A744D96000BEE45 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F761A744D96000BEE45 /* main.m */; };
 		0AE32F7A1A744D96000BEE45 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F791A744D96000BEE45 /* AppDelegate.m */; };
 		0AE32F7D1A744D96000BEE45 /* DropboxConnectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F7C1A744D96000BEE45 /* DropboxConnectViewController.m */; };
@@ -36,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0AA607451A7539B90003D7A4 /* CreatePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatePasswordViewController.h; sourceTree = "<group>"; };
+		0AA607461A7539B90003D7A4 /* CreatePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatePasswordViewController.m; sourceTree = "<group>"; };
 		0AE32F711A744D96000BEE45 /* CryptoShare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CryptoShare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AE32F751A744D96000BEE45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AE32F761A744D96000BEE45 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -154,8 +157,10 @@
 				0AE32F7C1A744D96000BEE45 /* DropboxConnectViewController.m */,
 				0AE32FAB1A744FDF000BEE45 /* MainTableViewController.h */,
 				0AE32FAC1A744FDF000BEE45 /* MainTableViewController.m */,
+				0AA607451A7539B90003D7A4 /* CreatePasswordViewController.h */,
+				0AA607461A7539B90003D7A4 /* CreatePasswordViewController.m */,
 			);
-			name = "View Controllers";
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		0AE32F9B1A744DA7000BEE45 /* Dropbox */ = {
@@ -164,7 +169,7 @@
 				0AE32FB81A745BE1000BEE45 /* DBCryptoSession.h */,
 				0AE32FB91A745BE1000BEE45 /* DBCryptoSession.m */,
 			);
-			name = Dropbox;
+			path = Dropbox;
 			sourceTree = "<group>";
 		};
 		0AE32FAA1A744E07000BEE45 /* Frameworks */ = {
@@ -284,6 +289,7 @@
 				0AE32FAD1A744FDF000BEE45 /* MainTableViewController.m in Sources */,
 				0AE32F7D1A744D96000BEE45 /* DropboxConnectViewController.m in Sources */,
 				0AE32F7A1A744D96000BEE45 /* AppDelegate.m in Sources */,
+				0AA607471A7539B90003D7A4 /* CreatePasswordViewController.m in Sources */,
 				0AE32F771A744D96000BEE45 /* main.m in Sources */,
 				0AE32FBA1A745BE1000BEE45 /* DBCryptoSession.m in Sources */,
 			);
