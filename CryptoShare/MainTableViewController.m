@@ -9,8 +9,7 @@
 #import "MainTableViewController.h"
 
 #import <Dropbox/Dropbox.h>
-
-#import "CryptoManager.h"
+#import "DBCryptoSession.h"
 
 @implementation MainTableViewController
 
@@ -34,13 +33,16 @@
         UIViewController *connectDropboxVC = [theStoryboard instantiateViewControllerWithIdentifier:@"connectDropbox"];
 
         [self presentViewController:connectDropboxVC animated:YES completion:nil];
-    } else {
+        return;
+    }
 
+    DBCryptoSession *cryptoSession = [DBCryptoSession beginSession];
+
+    if (cryptoSession.state == DBCryptoSessionStateUnconfigured) {
+        
     }
 }
 
-#pragma mark - Dropbox Data
-- (void)populate
 
 
 #pragma mark - UI Handlers

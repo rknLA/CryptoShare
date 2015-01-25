@@ -11,7 +11,7 @@
 #import <Dropbox/Dropbox.h>
 
 #import "MainTableViewController.h"
-#import "SplashViewController.h"
+#import "DropboxConnectViewController.h"
 
 @interface AppDelegate ()
 

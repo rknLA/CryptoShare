@@ -6,15 +6,15 @@
 //  Copyright (c) 2015 rknLA. All rights reserved.
 //
 
-#import "SplashViewController.h"
+#import "DropboxConnectViewController.h"
 
 #import <Dropbox/Dropbox.h>
 
-@interface SplashViewController ()
+@interface DropboxConnectViewController ()
 
 @end
 
-@implementation SplashViewController
+@implementation DropboxConnectViewController
 
 @synthesize connectButton = _connectButton;
 

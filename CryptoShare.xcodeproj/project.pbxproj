@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		0AE32F771A744D96000BEE45 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F761A744D96000BEE45 /* main.m */; };
 		0AE32F7A1A744D96000BEE45 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F791A744D96000BEE45 /* AppDelegate.m */; };
-		0AE32F7D1A744D96000BEE45 /* SplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F7C1A744D96000BEE45 /* SplashViewController.m */; };
+		0AE32F7D1A744D96000BEE45 /* DropboxConnectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F7C1A744D96000BEE45 /* DropboxConnectViewController.m */; };
 		0AE32F801A744D96000BEE45 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AE32F7E1A744D96000BEE45 /* Main.storyboard */; };
 		0AE32F821A744D96000BEE45 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AE32F811A744D96000BEE45 /* Images.xcassets */; };
 		0AE32F851A744D96000BEE45 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AE32F831A744D96000BEE45 /* LaunchScreen.xib */; };
@@ -41,8 +41,8 @@
 		0AE32F761A744D96000BEE45 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		0AE32F781A744D96000BEE45 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		0AE32F791A744D96000BEE45 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		0AE32F7B1A744D96000BEE45 /* SplashViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SplashViewController.h; sourceTree = "<group>"; };
-		0AE32F7C1A744D96000BEE45 /* SplashViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SplashViewController.m; sourceTree = "<group>"; };
+		0AE32F7B1A744D96000BEE45 /* DropboxConnectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DropboxConnectViewController.h; sourceTree = "<group>"; };
+		0AE32F7C1A744D96000BEE45 /* DropboxConnectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DropboxConnectViewController.m; sourceTree = "<group>"; };
 		0AE32F7F1A744D96000BEE45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0AE32F811A744D96000BEE45 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		0AE32F841A744D96000BEE45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -150,8 +150,8 @@
 		0AE32F9A1A744D9E000BEE45 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0AE32F7B1A744D96000BEE45 /* SplashViewController.h */,
-				0AE32F7C1A744D96000BEE45 /* SplashViewController.m */,
+				0AE32F7B1A744D96000BEE45 /* DropboxConnectViewController.h */,
+				0AE32F7C1A744D96000BEE45 /* DropboxConnectViewController.m */,
 				0AE32FAB1A744FDF000BEE45 /* MainTableViewController.h */,
 				0AE32FAC1A744FDF000BEE45 /* MainTableViewController.m */,
 			);
@@ -282,7 +282,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AE32FAD1A744FDF000BEE45 /* MainTableViewController.m in Sources */,
-				0AE32F7D1A744D96000BEE45 /* SplashViewController.m in Sources */,
+				0AE32F7D1A744D96000BEE45 /* DropboxConnectViewController.m in Sources */,
 				0AE32F7A1A744D96000BEE45 /* AppDelegate.m in Sources */,
 				0AE32F771A744D96000BEE45 /* main.m in Sources */,
 				0AE32FBA1A745BE1000BEE45 /* DBCryptoSession.m in Sources */,
@@ -486,6 +486,7 @@
 				0AE32F961A744D96000BEE45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0AE32F971A744D96000BEE45 /* Build configuration list for PBXNativeTarget "CryptoShareTests" */ = {
 			isa = XCConfigurationList;
@@ -494,6 +495,7 @@
 				0AE32F991A744D96000BEE45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

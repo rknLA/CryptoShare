@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
     <scenes>
-        <!--Splash View Controller-->
+        <!--Dropbox Connect View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="connectDropbox" id="BYZ-38-t0r" customClass="SplashViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="connectDropbox" id="BYZ-38-t0r" customClass="DropboxConnectViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>

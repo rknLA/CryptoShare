@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SplashViewController : UIViewController
+@interface DropboxConnectViewController : UIViewController
 
 @property (nonatomic, weak) IBOutlet UIButton *connectButton;
 
