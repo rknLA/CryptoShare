@@ -71,6 +71,12 @@ static DBCryptoSession *_cryptoSession;
     // - load auth metadata required to "unlock" the crypto safe
     // - set the session state
 
+    DBFilesystem *sharedFilesystem = [DBFilesystem sharedFilesystem];
+    if (sharedFilesystem == nil) {
+        sharedFilesystem = [[DBFilesystem alloc] initWithAccount:[[DBAccountManager sharedManager] linkedAccount]];
+        [DBFilesystem setSharedFilesystem:sharedFilesystem];
+    }
+
     DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
     DBError *dbErr;
     DBFileInfo *packageInfo = [[DBFilesystem sharedFilesystem] fileInfoForPath:packagePath error:&dbErr];
@@ -107,23 +113,27 @@ static DBCryptoSession *_cryptoSession;
 
     DBError *dbErr;
     DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
-    [[DBFilesystem sharedFilesystem] createFolder:packagePath error:&dbErr];
+    BOOL createdFolder = [[DBFilesystem sharedFilesystem] createFolder:packagePath error:&dbErr];
 
-    if (dbErr != nil) {
+    if (dbErr != nil || !createdFolder) {
         NSLog(@"Error creating Package. %@", [dbErr localizedDescription]);
     }
 
-    NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"Auth" ofType:@"plist"];
-    [_sessionAuthenticationMetadata writeToFile:plistPath atomically:YES];
-
-    DBPath *dbAuthPath = [packagePath childPath:@"Auth.plist"];
-    DBFile *dbAuthPlist = [[DBFilesystem sharedFilesystem] openFile:dbAuthPath error:&dbErr];
-    if (dbErr != nil) {
-        NSLog(@"Error opening auth plist file on Dropbox");
+    NSString *docsDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *plistPath = [docsDir stringByAppendingPathComponent:@"Auth.plist"];
+    BOOL wroteToLocalFS = [_sessionAuthenticationMetadata writeToFile:plistPath atomically:YES];
+    if (!wroteToLocalFS) {
+        NSLog(@"Error writing Plist to local FS");
     }
 
-    [dbAuthPlist writeContentsOfFile:plistPath shouldSteal:YES error:&dbErr];
+    DBPath *dbAuthPath = [packagePath childPath:@"Auth.plist"];
+    DBFile *dbAuthPlist = [[DBFilesystem sharedFilesystem] createFile:dbAuthPath error:&dbErr];
     if (dbErr != nil) {
+        NSLog(@"Error creating auth plist file on Dropbox");
+    }
+
+    BOOL writeSuccess = [dbAuthPlist writeContentsOfFile:plistPath shouldSteal:YES error:&dbErr];
+    if (dbErr != nil || !writeSuccess) {
         NSLog(@"Error copying plist file from local to dropbox");
     }
     [dbAuthPlist close];
@@ -138,6 +148,8 @@ static DBCryptoSession *_cryptoSession;
     DBFile *authFile = [[DBFilesystem sharedFilesystem] openFile:dbAuthPath error:&dbErr];
     if (dbErr != nil) {
         NSLog(@"Error opening auth file.");
+        [self createMainPackage];
+        authFile = [[DBFilesystem sharedFilesystem] openFile:dbAuthPath error:&dbErr];
     }
 
     NSData *authData = [authFile readData:&dbErr];

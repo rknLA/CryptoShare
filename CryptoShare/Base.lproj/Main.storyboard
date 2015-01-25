@@ -17,6 +17,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect to Dropbox to get started" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="USc-IL-GVP">
+                                <rect key="frame" x="168" y="164" width="264" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tbY-LS-d5D">
                                 <rect key="frame" x="271" y="285" width="59" height="30"/>
                                 <state key="normal" title="Connect">
@@ -26,21 +32,29 @@
                                     <action selector="connectTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Q8x-bd-0hH"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect to Dropbox to get started" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="USc-IL-GVP">
-                                <rect key="frame" x="168" y="164" width="264" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Loading background" translatesAutoresizingMaskIntoConstraints="NO" id="dNc-xa-Sk7">
+                                <rect key="frame" x="250" y="250" width="100" height="100"/>
+                            </imageView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="5cO-x1-sb0">
+                                <rect key="frame" x="282" y="281" width="37" height="37"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="tbY-LS-d5D" secondAttribute="centerY" id="0W2-wv-dLm"/>
+                            <constraint firstAttribute="centerY" secondItem="dNc-xa-Sk7" secondAttribute="centerY" id="Cqz-sR-bJS"/>
+                            <constraint firstAttribute="centerX" secondItem="dNc-xa-Sk7" secondAttribute="centerX" id="HE6-me-ydj"/>
+                            <constraint firstAttribute="centerX" secondItem="5cO-x1-sb0" secondAttribute="centerX" id="ItM-Zl-19F"/>
                             <constraint firstItem="tbY-LS-d5D" firstAttribute="top" secondItem="USc-IL-GVP" secondAttribute="bottom" constant="100" id="JxP-ln-2Of"/>
                             <constraint firstAttribute="centerX" secondItem="USc-IL-GVP" secondAttribute="centerX" id="OaW-nn-YyT"/>
+                            <constraint firstAttribute="centerY" secondItem="5cO-x1-sb0" secondAttribute="centerY" id="VRZ-LD-PcN"/>
                             <constraint firstAttribute="centerX" secondItem="tbY-LS-d5D" secondAttribute="centerX" id="qwH-k3-BOn"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="loadingBackground" destination="dNc-xa-Sk7" id="N1g-BT-Eez"/>
+                        <outlet property="loadingWheel" destination="5cO-x1-sb0" id="pMb-XT-K02"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -150,4 +164,7 @@
             <point key="canvasLocation" x="-295" y="1020"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Loading background" width="100" height="100"/>
+    </resources>
 </document>

@@ -11,6 +11,8 @@
 @interface DropboxConnectViewController : UIViewController
 
 @property (nonatomic, weak) IBOutlet UIButton *connectButton;
+@property (nonatomic, weak) IBOutlet UIImageView *loadingBackground;
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *loadingWheel;
 
 - (IBAction)connectTapped:(id)sender;
 

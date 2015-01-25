@@ -21,6 +21,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+
+    [self.loadingWheel stopAnimating];
+    [self.loadingWheel setHidden:YES];
+    [self.loadingBackground setHidden:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -38,6 +42,12 @@
 - (IBAction)connectTapped:(id)sender
 {
     NSLog(@"Connect tapped");
+
+    [self.loadingBackground setHidden:NO];
+    [self.loadingWheel setHidden:NO];
+    [self.loadingWheel startAnimating];
+    [self.connectButton setEnabled:NO];
+
     [[DBAccountManager sharedManager] linkFromController:self];
 }
 

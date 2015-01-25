@@ -58,6 +58,12 @@
     DBAccount *account = [[DBAccountManager sharedManager] handleOpenURL:url];
     if (account) {
         NSLog(@"App linked successfully!");
+        DBFilesystem *acctFS = [[DBFilesystem alloc] initWithAccount:account];
+        [DBFilesystem setSharedFilesystem:acctFS];
+        while ([acctFS completedFirstSync] == NO) {
+            sleep(1);
+        }
+
         UINavigationController *mainView = (UINavigationController *)self.window.rootViewController;
         [mainView dismissViewControllerAnimated:YES completion:nil];
         return YES;
