@@ -41,6 +41,9 @@
     if (cryptoSession.state == DBCryptoSessionStateUnconfigured) {
         UIViewController *setPasswordVC = [theStoryboard instantiateViewControllerWithIdentifier:@"createPassword"];
         [self presentViewController:setPasswordVC animated:YES completion:nil];
+    } else if (cryptoSession.state == DBCryptoSessionStateLocked) {
+        UIViewController *enterPasswordVC = [theStoryboard instantiateViewControllerWithIdentifier:@"enterPassword"];
+        [self presentViewController:enterPasswordVC animated:YES completion:nil];
     }
 }
 

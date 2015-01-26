@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface CreatePasswordViewController : UIViewController
+@interface CreatePasswordViewController : UIViewController <UITextFieldDelegate>
 
 @property (nonatomic, weak) IBOutlet UITextField *passwordEntry;
 
-- (IBAction)passwordEntryCompleted:(id)sender;
+- (void)passwordEntryCompleted:(NSString *)passphrase;
 
 @end

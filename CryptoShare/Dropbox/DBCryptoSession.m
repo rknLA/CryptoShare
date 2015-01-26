@@ -8,10 +8,15 @@
 
 #import "DBCryptoSession.h"
 
+#import <CommonCrypto/CommonCrypto.h>
+
 static DBCryptoSession *_cryptoSession;
 
 
-@interface DBCryptoSession()
+@interface DBCryptoSession() {
+    uint8_t _aesKey[32];
+    uint8_t _hmacKey[32];
+}
 
 @property (nonatomic, assign) DBCryptoSessionState state;
 @property (nonatomic, strong) NSDictionary *sessionAuthenticationMetadata;
@@ -87,12 +92,14 @@ static DBCryptoSession *_cryptoSession;
         [self loadAuthDictionary];
     }
 
-    NSString *salt = [_sessionAuthenticationMetadata objectForKey:@"salt"];
+    NSString *aesSalt = [_sessionAuthenticationMetadata objectForKey:@"na"];
+    NSString *hmacSalt = [_sessionAuthenticationMetadata objectForKey:@"cl"];
     NSString *authId = [_sessionAuthenticationMetadata objectForKey:@"id"];
     NSString *data = [_sessionAuthenticationMetadata objectForKey:@"data"];
 
-    if ([salt isEqualToString:@""] ||
-        [authId isEqualToString:@""] |
+    if ([aesSalt isEqualToString:@""] ||
+        [hmacSalt isEqualToString:@""] ||
+        [authId isEqualToString:@""] ||
         [data isEqualToString:@""]) {
         self.state = DBCryptoSessionStateUnconfigured;
     } else {
@@ -100,13 +107,250 @@ static DBCryptoSession *_cryptoSession;
     }
 }
 
+- (void)setPassphrase:(NSString *)passphrase
+{
+    NSLog(@"Should set the passphrase to: %@", passphrase);
+
+    NSData *passData = [passphrase dataUsingEncoding:NSUTF8StringEncoding];
+
+    // generate passphrase UUID
+    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+    NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+
+    // generate salt
+    NSData *aesSalt = [self generateSalt256];
+    NSData *hmacSalt = [self generateSalt256];
+
+    // generate password check
+    CCKeyDerivationPBKDF(kCCPBKDF2,
+                         passData.bytes,
+                         passData.length,
+                         aesSalt.bytes,
+                         aesSalt.length,
+                         kCCPRFHmacAlgSHA256,
+                         kDefaultNumberOfIterations,
+                         _aesKey,
+                         32);
+
+    CCKeyDerivationPBKDF(kCCPBKDF2,
+                         passData.bytes,
+                         passData.length,
+                         hmacSalt.bytes,
+                         hmacSalt.length,
+                         kCCPRFHmacAlgSHA256,
+                         kDefaultNumberOfIterations,
+                         _hmacKey,
+                         32);
+
+    NSData *payloadData = [kPassphraseCheckPayload dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *passphraseCheck = [self cryptThenMacThenEncode:payloadData cryptoKey:_aesKey macKey:_hmacKey];
+
+    NSMutableDictionary *mutableAuthMetadata = [_sessionAuthenticationMetadata mutableCopy];
+    NSString *aesSaltStr = [aesSalt base64EncodedStringWithOptions:0];
+    NSString *macSaltStr = [hmacSalt base64EncodedStringWithOptions:0];
+    [mutableAuthMetadata setObject:aesSaltStr forKey:@"na"];
+    [mutableAuthMetadata setObject:macSaltStr forKey:@"cl"];
+    [mutableAuthMetadata setObject:uuidString forKey:@"id"];
+    [mutableAuthMetadata setObject:passphraseCheck forKey:@"data"];
+    _sessionAuthenticationMetadata = [NSDictionary dictionaryWithDictionary:mutableAuthMetadata];
+    [self writeAuthMetadata];
+
+    // set state to locked
+    self.state = DBCryptoSessionStateLocked;
+
+    // auto-unlock with password
+    [self unlockSession:passphrase];
+}
+
+- (BOOL)unlockSession:(NSString *)passphrase
+{
+    // -- generate key from passphrase --
+    NSData *passData = [passphrase dataUsingEncoding:NSUTF8StringEncoding];
+
+    // retrieve salts
+    NSData *aesSalt = [[NSData alloc] initWithBase64EncodedString:[_sessionAuthenticationMetadata objectForKey:@"na"]
+                                                          options:0];
+    NSData *hmacSalt = [[NSData alloc] initWithBase64EncodedString:[_sessionAuthenticationMetadata objectForKey:@"cl"]
+                                                           options:0];
+
+    uint8_t computedAesKey[32];
+    uint8_t computedMacKey[32];
+
+    // generate password check
+    CCKeyDerivationPBKDF(kCCPBKDF2,
+                         passData.bytes,
+                         passData.length,
+                         aesSalt.bytes,
+                         aesSalt.length,
+                         kCCPRFHmacAlgSHA256,
+                         kDefaultNumberOfIterations,
+                         computedAesKey,
+                         32);
+
+    CCKeyDerivationPBKDF(kCCPBKDF2,
+                         passData.bytes,
+                         passData.length,
+                         hmacSalt.bytes,
+                         hmacSalt.length,
+                         kCCPRFHmacAlgSHA256,
+                         kDefaultNumberOfIterations,
+                         computedMacKey,
+                         32);
+
+    // attempt to decrypt password check
+    NSString *storedPasswordCheck = [_sessionAuthenticationMetadata objectForKey:@"data"];
+
+    NSData *decoded = [self decodeThenMacThenDecrypt:storedPasswordCheck cryptoKey:computedAesKey macKey:computedMacKey];
+
+    if (decoded == nil || ![decoded isEqualToData:[kPassphraseCheckPayload dataUsingEncoding:NSUTF8StringEncoding]]) {
+        NSLog(@"invalid passphrase!");
+        return NO;
+    } else {
+        NSLog(@"Correct password!");
+    }
+
+    // if successful, store key in RAM, set state to unlocked.
+    memcpy(_aesKey, computedAesKey, kCCKeySizeAES256);
+    memcpy(_hmacKey, computedMacKey, kCCKeySizeAES256);
+
+    // return whether successful or not
+    return YES;
+}
+
+
+- (void)lockSession
+{
+    // if session is unlocked,
+    //    delete generated key from memory
+    // else
+    //    nop
+}
+
+#pragma mark - Crypto functions
+
+- (NSData*)generateSalt256 {
+    unsigned char salt[32];
+    for (int i=0; i<32; i++) {
+        salt[i] = (unsigned char)arc4random();
+    }
+    return [NSData dataWithBytes:salt length:32];
+}
+
+- (NSString *)cryptThenMacThenEncode:(NSData *)payload cryptoKey:(uint8_t *)cryptoKey macKey:(uint8_t *)macKey
+{
+    // generate IV
+    NSData *iv = [self generateRandomBytes:kCCKeySizeAES256];
+
+    size_t outLength;
+    NSMutableData *cipherText = [NSMutableData dataWithLength:(payload.length + kCCBlockSizeAES128)];
+
+    // run the encryption
+    CCCryptorStatus result = CCCrypt(kCCEncrypt,
+                                     kCCAlgorithmAES,
+                                     kCCOptionPKCS7Padding,
+                                     cryptoKey,
+                                     kCCKeySizeAES256,
+                                     iv.bytes,
+                                     payload.bytes,
+                                     payload.length,
+                                     cipherText.mutableBytes,
+                                     cipherText.length,
+                                     &outLength);
+
+    if (result != kCCSuccess) {
+        NSLog(@"Error encrypting text: %d", result);
+        return nil;
+    }
+
+    cipherText.length = outLength;
+    NSMutableData *ivCipher = [[NSMutableData alloc] init];
+    [ivCipher appendBytes:iv.bytes length:iv.length];
+    [ivCipher appendBytes:cipherText.bytes length:cipherText.length];
+
+    // compute the HMAC of the iv+cipher
+    NSMutableData *signature = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
+    CCHmac(kCCHmacAlgSHA256,
+           macKey,
+           kCCKeySizeAES256,
+           ivCipher.bytes,
+           ivCipher.length,
+           signature.mutableBytes);
+
+    [ivCipher appendData:signature];
+
+    NSString *output = [ivCipher base64EncodedStringWithOptions:0];
+    return output;
+}
+
+- (NSData *)decodeThenMacThenDecrypt:(NSString *)ciphertext cryptoKey:(uint8_t *)cryptoKey macKey:(uint8_t *)macKey
+{
+    NSData *decoded = [[NSData alloc] initWithBase64EncodedString:ciphertext options:0];
+    uint64_t signatureIndex = decoded.length - CC_SHA256_DIGEST_LENGTH;
+    NSData *expectedSignature = [decoded subdataWithRange:NSMakeRange(signatureIndex, CC_SHA256_DIGEST_LENGTH)];
+    NSData *signedData = [decoded subdataWithRange:NSMakeRange(0, signatureIndex)];
+
+    NSMutableData *computedSignature = [NSMutableData dataWithLength:CC_SHA256_DIGEST_LENGTH];
+    CCHmac(kCCHmacAlgSHA256,
+           macKey,
+           kCCKeySizeAES256,
+           signedData.bytes,
+           signedData.length,
+           computedSignature.mutableBytes);
+
+    if (![expectedSignature isEqualToData:computedSignature]) {
+        NSLog(@"Invalid Hmac signature, so must be a bad key!");
+        return nil;
+    }
+
+    NSData *iv = [signedData subdataWithRange:NSMakeRange(0, kCCKeySizeAES256)];
+    uint64_t cipherLength = signedData.length - kCCKeySizeAES256;
+    NSData *cipherText = [signedData subdataWithRange:NSMakeRange(kCCKeySizeAES256, cipherLength)];
+
+    size_t outLength;
+    NSMutableData *clearText = [NSMutableData dataWithLength:(cipherText.length + kCCBlockSizeAES128)];
+
+    // run the encryption
+    CCCryptorStatus result = CCCrypt(kCCDecrypt,
+                                     kCCAlgorithmAES,
+                                     kCCOptionPKCS7Padding,
+                                     cryptoKey,
+                                     kCCKeySizeAES256,
+                                     iv.bytes,
+                                     cipherText.bytes,
+                                     cipherText.length,
+                                     clearText.mutableBytes,
+                                     clearText.length,
+                                     &outLength);
+
+    if (result != kCCSuccess) {
+        NSLog(@"Error decrypting text: %d", result);
+        return nil;
+    }
+
+    clearText.length = outLength;
+
+    return clearText;
+}
+
+- (NSData *)generateRandomBytes:(size_t)length
+{
+    NSMutableData *data = [NSMutableData dataWithLength:length];
+
+    int result = SecRandomCopyBytes(kSecRandomDefault, length, data.mutableBytes);
+    NSAssert(result == 0, @"Unable to generate random bytes: %d", errno);
+
+    return data;
+}
+
+
 #pragma mark - Dropbox Files
 
 - (void)createMainPackage
 {
     _sessionAuthenticationMetadata = @{
-                                       @"salt": @"",
-                                       @"iterations": @100000,
+                                       @"na": @"",
+                                       @"cl": @"",
+                                       @"iterations": [NSNumber numberWithLong:kDefaultNumberOfIterations],
                                        @"id": @"",
                                        @"data": @""
                                        };
@@ -119,6 +363,20 @@ static DBCryptoSession *_cryptoSession;
         NSLog(@"Error creating Package. %@", [dbErr localizedDescription]);
     }
 
+    DBPath *dbAuthPath = [packagePath childPath:@"Auth.plist"];
+    DBFile *dbAuthPlist = [[DBFilesystem sharedFilesystem] createFile:dbAuthPath error:&dbErr];
+    if (dbErr != nil) {
+        NSLog(@"Error creating auth plist file on Dropbox");
+    }
+    [dbAuthPlist close];
+
+    [self writeAuthMetadata];
+}
+
+
+- (void)writeAuthMetadata
+{
+    DBError *dbErr;
     NSString *docsDir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *plistPath = [docsDir stringByAppendingPathComponent:@"Auth.plist"];
     BOOL wroteToLocalFS = [_sessionAuthenticationMetadata writeToFile:plistPath atomically:YES];
@@ -126,8 +384,10 @@ static DBCryptoSession *_cryptoSession;
         NSLog(@"Error writing Plist to local FS");
     }
 
+
+    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
     DBPath *dbAuthPath = [packagePath childPath:@"Auth.plist"];
-    DBFile *dbAuthPlist = [[DBFilesystem sharedFilesystem] createFile:dbAuthPath error:&dbErr];
+    DBFile *dbAuthPlist = [[DBFilesystem sharedFilesystem] openFile:dbAuthPath error:&dbErr];
     if (dbErr != nil) {
         NSLog(@"Error creating auth plist file on Dropbox");
     }

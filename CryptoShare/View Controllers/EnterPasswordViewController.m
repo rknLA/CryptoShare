@@ -1,22 +1,25 @@
 //
-//  CreatePasswordViewController.m
+//  EnterPasswordViewController.m
 //  CryptoShare
 //
-//  Created by Kevin Nelson on 1/25/15.
+//  Created by Kevin Nelson on 1/26/15.
 //  Copyright (c) 2015 rknLA. All rights reserved.
 //
 
-#import "CreatePasswordViewController.h"
+#import "EnterPasswordViewController.h"
 
 #import "DBCryptoSession.h"
 
-@implementation CreatePasswordViewController
+@interface EnterPasswordViewController ()
 
+@end
+
+@implementation EnterPasswordViewController
 
 - (void)passwordEntryCompleted:(NSString *)passphrase
 {
     NSLog(@"Done entering password");
-    [[DBCryptoSession currentSession] setPassphrase:passphrase];
+    [[DBCryptoSession currentSession] unlockSession:passphrase];
     [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -36,5 +39,6 @@
     [textField resignFirstResponder];
     return YES;
 }
+
 
 @end

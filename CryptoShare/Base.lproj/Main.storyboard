@@ -96,7 +96,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                 <connections>
-                                    <action selector="passwordEntryCompleted:" destination="kur-KM-ilz" eventType="editingDidEnd" id="NP2-Fr-uGU"/>
+                                    <outlet property="delegate" destination="kur-KM-ilz" id="CNl-mP-RN6"/>
                                 </connections>
                             </textField>
                         </subviews>
@@ -119,6 +119,65 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="44c-69-Gyf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="525" y="349"/>
+        </scene>
+        <!--Enter Password View Controller-->
+        <scene sceneID="zGG-2x-n3J">
+            <objects>
+                <viewController storyboardIdentifier="enterPassword" id="Veo-2y-Dqa" customClass="EnterPasswordViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="3ea-EP-K8C"/>
+                        <viewControllerLayoutGuide type="bottom" id="wEU-e9-kre"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="NKP-XN-0ut">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please enter your password." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1o9-GG-E06">
+                                <rect key="frame" x="16" y="40" width="568" height="160"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES" staticText="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="160" id="dWS-7n-ZVI"/>
+                                    <constraint firstAttribute="height" constant="120" id="jPB-4w-sPI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="jPB-4w-sPI"/>
+                                    </mask>
+                                </variation>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HHU-eW-5Cf">
+                                <rect key="frame" x="16" y="220" width="568" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Veo-2y-Dqa" id="F8A-1M-cyv"/>
+                                </connections>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="1o9-GG-E06" secondAttribute="centerX" id="0wp-WS-DwL"/>
+                            <constraint firstAttribute="centerX" secondItem="HHU-eW-5Cf" secondAttribute="centerX" id="7yh-9c-XaC"/>
+                            <constraint firstItem="HHU-eW-5Cf" firstAttribute="trailing" secondItem="NKP-XN-0ut" secondAttribute="trailingMargin" id="EbY-rW-Yh1"/>
+                            <constraint firstItem="1o9-GG-E06" firstAttribute="trailing" secondItem="NKP-XN-0ut" secondAttribute="trailingMargin" id="QQy-v7-8dH"/>
+                            <constraint firstItem="1o9-GG-E06" firstAttribute="top" secondItem="3ea-EP-K8C" secondAttribute="bottom" constant="20" id="XjN-gy-f4O"/>
+                            <constraint firstItem="HHU-eW-5Cf" firstAttribute="top" secondItem="1o9-GG-E06" secondAttribute="bottom" constant="20" id="ZCp-hE-yoq"/>
+                            <constraint firstItem="HHU-eW-5Cf" firstAttribute="leading" secondItem="NKP-XN-0ut" secondAttribute="leadingMargin" id="cPB-7H-BMg"/>
+                            <constraint firstItem="1o9-GG-E06" firstAttribute="leading" secondItem="NKP-XN-0ut" secondAttribute="leadingMargin" id="xfg-X5-XEr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="passwordEntry" destination="HHU-eW-5Cf" id="RXx-Je-Kg2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="upf-Xq-HJO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1207" y="349"/>
         </scene>
         <!--Root View Controller-->
         <scene sceneID="umT-XH-iNt">

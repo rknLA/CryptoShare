@@ -17,6 +17,8 @@ typedef enum {
     DBCryptoSessionStateUnlocked
 } DBCryptoSessionState;
 
+static const long kDefaultNumberOfIterations = 100000;
+static NSString const * kPassphraseCheckPayload = @"I am just a string to check if the passphrase was decoded.";
 
 @interface DBCryptoSession : NSObject
 
@@ -25,5 +27,9 @@ typedef enum {
 + (void)endSession;
 
 @property (nonatomic, readonly) DBCryptoSessionState state;
+
+- (void)setPassphrase:(NSString *)passphrase;
+- (BOOL)unlockSession:(NSString *)passphrase;
+- (void)lockSession;
 
 @end
