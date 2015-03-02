@@ -17,7 +17,7 @@
 {
     NSLog(@"Done entering password");
     [[DBCryptoSession currentSession] setPassphrase:passphrase];
-    [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - UITextFieldDelegate

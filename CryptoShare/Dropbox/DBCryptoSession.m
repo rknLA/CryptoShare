@@ -212,6 +212,7 @@ static DBCryptoSession *_cryptoSession;
     // if successful, store key in RAM, set state to unlocked.
     memcpy(_aesKey, computedAesKey, kCCKeySizeAES256);
     memcpy(_hmacKey, computedMacKey, kCCKeySizeAES256);
+    self.state = DBCryptoSessionStateUnlocked;
 
     // return whether successful or not
     return YES;
@@ -220,10 +221,15 @@ static DBCryptoSession *_cryptoSession;
 
 - (void)lockSession
 {
-    // if session is unlocked,
-    //    delete generated key from memory
-    // else
-    //    nop
+    if (self.state == DBCryptoSessionStateUnlocked) {
+        memset(_aesKey, 0, kCCKeySizeAES256);
+        memset(_hmacKey, 0, kCCKeySizeAES256);
+
+        // maybe also close dropbox files?
+
+        self.state = DBCryptoSessionStateLocked;
+    }
+
 }
 
 #pragma mark - Crypto functions
@@ -373,6 +379,15 @@ static DBCryptoSession *_cryptoSession;
     [self writeAuthMetadata];
 }
 
+
+- (void)resetSession
+{
+    // clears out any previously stored data.  obviously this is
+    // dangerous if done with production data
+    DBError *dbErr;
+    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
+    BOOL successDelete = [[DBFilesystem sharedFilesystem] deletePath:packagePath error:&dbErr];
+}
 
 - (void)writeAuthMetadata
 {

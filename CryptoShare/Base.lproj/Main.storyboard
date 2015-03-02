@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="1Be-fa-86f">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="1Be-fa-86f">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -158,16 +158,27 @@
                                     <outlet property="delegate" destination="Veo-2y-Dqa" id="F8A-1M-cyv"/>
                                 </connections>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NEr-yG-zzc">
+                                <rect key="frame" x="244" y="530" width="112" height="30"/>
+                                <state key="normal" title="Reset Password">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="resetPasswordTapped:" destination="Veo-2y-Dqa" eventType="touchUpInside" id="vBo-AM-ZE6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="1o9-GG-E06" secondAttribute="centerX" id="0wp-WS-DwL"/>
                             <constraint firstAttribute="centerX" secondItem="HHU-eW-5Cf" secondAttribute="centerX" id="7yh-9c-XaC"/>
                             <constraint firstItem="HHU-eW-5Cf" firstAttribute="trailing" secondItem="NKP-XN-0ut" secondAttribute="trailingMargin" id="EbY-rW-Yh1"/>
+                            <constraint firstItem="wEU-e9-kre" firstAttribute="top" secondItem="NEr-yG-zzc" secondAttribute="bottom" constant="40" id="NfD-Cr-Hgb"/>
                             <constraint firstItem="1o9-GG-E06" firstAttribute="trailing" secondItem="NKP-XN-0ut" secondAttribute="trailingMargin" id="QQy-v7-8dH"/>
                             <constraint firstItem="1o9-GG-E06" firstAttribute="top" secondItem="3ea-EP-K8C" secondAttribute="bottom" constant="20" id="XjN-gy-f4O"/>
                             <constraint firstItem="HHU-eW-5Cf" firstAttribute="top" secondItem="1o9-GG-E06" secondAttribute="bottom" constant="20" id="ZCp-hE-yoq"/>
                             <constraint firstItem="HHU-eW-5Cf" firstAttribute="leading" secondItem="NKP-XN-0ut" secondAttribute="leadingMargin" id="cPB-7H-BMg"/>
+                            <constraint firstItem="HHU-eW-5Cf" firstAttribute="centerX" secondItem="NEr-yG-zzc" secondAttribute="centerX" id="tkr-Pl-hOE"/>
                             <constraint firstItem="1o9-GG-E06" firstAttribute="leading" secondItem="NKP-XN-0ut" secondAttribute="leadingMargin" id="xfg-X5-XEr"/>
                         </constraints>
                     </view>

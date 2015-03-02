@@ -19,8 +19,19 @@
 - (void)passwordEntryCompleted:(NSString *)passphrase
 {
     NSLog(@"Done entering password");
-    [[DBCryptoSession currentSession] unlockSession:passphrase];
-    [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
+    if ([[DBCryptoSession currentSession] unlockSession:passphrase]) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+- (IBAction)resetPasswordTapped:(id)sender
+{
+    [[DBCryptoSession currentSession] resetSession];
+    UIStoryboard *theStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UIViewController *setPasswordVC = [theStoryboard instantiateViewControllerWithIdentifier:@"createPassword"];
+    [self presentViewController:setPasswordVC animated:YES completion:^{
+
+    }];
 }
 
 #pragma mark - UITextFieldDelegate

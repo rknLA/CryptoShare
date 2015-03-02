@@ -32,4 +32,6 @@ static NSString const * kPassphraseCheckPayload = @"I am just a string to check 
 - (BOOL)unlockSession:(NSString *)passphrase;
 - (void)lockSession;
 
+- (void)resetSession;
+
 @end

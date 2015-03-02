@@ -12,4 +12,6 @@
 
 @property (nonatomic, weak) IBOutlet UITextField *passwordEntry;
 
+- (IBAction)resetPasswordTapped:(id)sender;
+
 @end
