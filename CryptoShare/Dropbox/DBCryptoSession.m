@@ -82,9 +82,8 @@ static DBCryptoSession *_cryptoSession;
         [DBFilesystem setSharedFilesystem:sharedFilesystem];
     }
 
-    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
     DBError *dbErr;
-    DBFileInfo *packageInfo = [[DBFilesystem sharedFilesystem] fileInfoForPath:packagePath error:&dbErr];
+    DBFileInfo *packageInfo = [[DBFilesystem sharedFilesystem] fileInfoForPath:[self rootPath] error:&dbErr];
     
     if (packageInfo == nil || [dbErr code] == DBErrorNotFound) {
         [self createMainPackage];
@@ -232,6 +231,33 @@ static DBCryptoSession *_cryptoSession;
 
 }
 
+#pragma mark - Public Facing Encrypt/Decrypt
+- (NSString *)encryptData:(NSData *)payload
+{
+    if (self.state != DBCryptoSessionStateUnlocked) {
+        NSLog(@"You're trying to encrypt data without unlocking the datastore!");
+        return nil;
+    }
+
+    NSString *ciphertext = [self cryptThenMacThenEncode:payload
+                                              cryptoKey:_aesKey
+                                                 macKey:_hmacKey];
+    return ciphertext;
+}
+
+- (NSData *)decryptData:(NSString *)ciphertext
+{
+    if (self.state != DBCryptoSessionStateUnlocked) {
+        NSLog(@"You're trying to decrypt data without unlocking the datastore!");
+        return nil;
+    }
+
+    NSData *payload = [self decodeThenMacThenDecrypt:ciphertext
+                                           cryptoKey:_aesKey
+                                              macKey:_hmacKey];
+    return payload;
+}
+
 #pragma mark - Crypto functions
 
 - (NSData*)generateSalt256 {
@@ -351,6 +377,48 @@ static DBCryptoSession *_cryptoSession;
 
 #pragma mark - Dropbox Files
 
+- (DBPath *)rootPath
+{
+    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
+    return packagePath;
+}
+
+- (DBPath *)dataPath
+{
+    return [[self rootPath] childPath:@"data"];
+}
+
+- (NSData *)rawDataFromFileWithName:(NSString *)fileName
+{
+    DBError *dbErr;
+    DBPath *filePath = [[self dataPath] childPath:fileName];
+    DBFile *dataFile = [[DBFilesystem sharedFilesystem] openFile:filePath error:&dbErr];
+
+    if (dataFile == nil || dbErr != nil) {
+        NSLog(@"Error reading from file named %@", fileName);
+        return nil;
+    }
+
+    NSData *fileData = [dataFile readData:&dbErr];
+    return fileData;
+}
+
+- (DBFile *)getOrCreateDataFileWithName:(NSString *)fileName
+{
+    DBError *dbErr;
+    DBPath *filePath = [[self dataPath] childPath:fileName];
+    DBFileInfo *fileInfo = [[DBFilesystem sharedFilesystem] fileInfoForPath:filePath error:&dbErr];
+    DBFile *theFile;
+    if (fileInfo == nil && [dbErr code] == DBErrorNotFound) {
+        theFile = [[DBFilesystem sharedFilesystem] createFile:filePath error:&dbErr];
+    } else {
+        theFile = [[DBFilesystem sharedFilesystem] openFile:filePath error:&dbErr];
+    }
+
+    return theFile;
+}
+
+
 - (void)createMainPackage
 {
     _sessionAuthenticationMetadata = @{
@@ -362,7 +430,7 @@ static DBCryptoSession *_cryptoSession;
                                        };
 
     DBError *dbErr;
-    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
+    DBPath *packagePath = [self rootPath];
     BOOL createdFolder = [[DBFilesystem sharedFilesystem] createFolder:packagePath error:&dbErr];
 
     if (dbErr != nil || !createdFolder) {
@@ -376,6 +444,11 @@ static DBCryptoSession *_cryptoSession;
     }
     [dbAuthPlist close];
 
+    DBPath *dbDataPath = [self dataPath];
+    BOOL createdDataFolder = [[DBFilesystem sharedFilesystem] createFolder:dbDataPath error:&dbErr];
+    if (dbErr != nil || !createdDataFolder) {
+        NSLog(@"Error creating data folder in Package. %@", [dbErr localizedDescription]);
+    }
     [self writeAuthMetadata];
 }
 
@@ -385,8 +458,7 @@ static DBCryptoSession *_cryptoSession;
     // clears out any previously stored data.  obviously this is
     // dangerous if done with production data
     DBError *dbErr;
-    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
-    BOOL successDelete = [[DBFilesystem sharedFilesystem] deletePath:packagePath error:&dbErr];
+    BOOL successDelete = [[DBFilesystem sharedFilesystem] deletePath:[self rootPath] error:&dbErr];
 }
 
 - (void)writeAuthMetadata
@@ -399,9 +471,7 @@ static DBCryptoSession *_cryptoSession;
         NSLog(@"Error writing Plist to local FS");
     }
 
-
-    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
-    DBPath *dbAuthPath = [packagePath childPath:@"Auth.plist"];
+    DBPath *dbAuthPath = [[self rootPath] childPath:@"Auth.plist"];
     DBFile *dbAuthPlist = [[DBFilesystem sharedFilesystem] openFile:dbAuthPath error:&dbErr];
     if (dbErr != nil) {
         NSLog(@"Error creating auth plist file on Dropbox");
@@ -417,8 +487,7 @@ static DBCryptoSession *_cryptoSession;
 - (void)loadAuthDictionary
 {
     DBError *dbErr;
-    DBPath *packagePath = [[DBPath root] childPath:@"CryptoShare.crypt"];
-    DBPath *dbAuthPath = [packagePath childPath:@"Auth.plist"];
+    DBPath *dbAuthPath = [[self rootPath] childPath:@"Auth.plist"];
 
     DBFile *authFile = [[DBFilesystem sharedFilesystem] openFile:dbAuthPath error:&dbErr];
     if (dbErr != nil) {
@@ -441,6 +510,27 @@ static DBCryptoSession *_cryptoSession;
         NSLog(@"Error deserializing plist");
     }
     _sessionAuthenticationMetadata = (__bridge NSDictionary *)plist;
+}
+
+#pragma mark - Public-facing encrypted file access
+- (NSData *)decryptedDataFromFile:(NSString *)fileName
+{
+    NSData *rawData = [self rawDataFromFileWithName:fileName];
+    if (rawData == nil || [rawData length] == 0) {
+        return nil;
+    }
+    NSString *dataString = [[NSString alloc] initWithData:rawData encoding:NSUTF8StringEncoding];
+    NSData *payload = [self decryptData:dataString];
+    return payload;
+}
+
+- (void)writeData:(NSData *)unecryptedData toFile:(NSString *)fileName
+{
+    NSString *ciphertext = [self encryptData:unecryptedData];
+    DBFile *destination = [self getOrCreateDataFileWithName:fileName];
+    DBError *dbErr;
+    [destination writeString:ciphertext error:&dbErr];
+    [destination close];
 }
 
 @end

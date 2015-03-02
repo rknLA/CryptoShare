@@ -9,6 +9,7 @@
 #import "EnterPasswordViewController.h"
 
 #import "DBCryptoSession.h"
+#import "DBCJsonStore.h"
 
 @interface EnterPasswordViewController ()
 
@@ -19,7 +20,13 @@
 - (void)passwordEntryCompleted:(NSString *)passphrase
 {
     NSLog(@"Done entering password");
-    if ([[DBCryptoSession currentSession] unlockSession:passphrase]) {
+    DBCryptoSession *session = [DBCryptoSession currentSession];
+    if ([session unlockSession:passphrase]) {
+        DBCJsonStore *jsonStore = [DBCJsonStore sharedStore];
+        if (jsonStore == nil) {
+            jsonStore = [[DBCJsonStore alloc] initWithName:@"CryptoSync" andSession:session];
+            [DBCJsonStore setSharedStore:jsonStore];
+        }
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }

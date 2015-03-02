@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A7086BC1AA4B81000EC654F /* AddItemViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7086BB1AA4B81000EC654F /* AddItemViewController.m */; };
+		0A7086C21AA4BB2F00EC654F /* MyDBCManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7086C11AA4BB2F00EC654F /* MyDBCManager.m */; };
+		0A7086C51AA4BB7D00EC654F /* DBCJsonStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A7086C41AA4BB7D00EC654F /* DBCJsonStore.m */; };
 		0AA607471A7539B90003D7A4 /* CreatePasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA607461A7539B90003D7A4 /* CreatePasswordViewController.m */; };
 		0AA607541A75C7330003D7A4 /* EnterPasswordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AA607531A75C7330003D7A4 /* EnterPasswordViewController.m */; };
 		0AE32F771A744D96000BEE45 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AE32F761A744D96000BEE45 /* main.m */; };
@@ -38,6 +41,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0A7086BA1AA4B81000EC654F /* AddItemViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddItemViewController.h; sourceTree = "<group>"; };
+		0A7086BB1AA4B81000EC654F /* AddItemViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddItemViewController.m; sourceTree = "<group>"; };
+		0A7086C01AA4BB2F00EC654F /* MyDBCManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDBCManager.h; sourceTree = "<group>"; };
+		0A7086C11AA4BB2F00EC654F /* MyDBCManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDBCManager.m; sourceTree = "<group>"; };
+		0A7086C31AA4BB7D00EC654F /* DBCJsonStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBCJsonStore.h; sourceTree = "<group>"; };
+		0A7086C41AA4BB7D00EC654F /* DBCJsonStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBCJsonStore.m; sourceTree = "<group>"; };
 		0AA607451A7539B90003D7A4 /* CreatePasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CreatePasswordViewController.h; sourceTree = "<group>"; };
 		0AA607461A7539B90003D7A4 /* CreatePasswordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CreatePasswordViewController.m; sourceTree = "<group>"; };
 		0AA607521A75C7330003D7A4 /* EnterPasswordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnterPasswordViewController.h; sourceTree = "<group>"; };
@@ -93,6 +102,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A7086B91AA4B7EF00EC654F /* Passwords */ = {
+			isa = PBXGroup;
+			children = (
+				0AA607451A7539B90003D7A4 /* CreatePasswordViewController.h */,
+				0AA607461A7539B90003D7A4 /* CreatePasswordViewController.m */,
+				0AA607521A75C7330003D7A4 /* EnterPasswordViewController.h */,
+				0AA607531A75C7330003D7A4 /* EnterPasswordViewController.m */,
+			);
+			name = Passwords;
+			sourceTree = "<group>";
+		};
 		0AE32F681A744D95000BEE45 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +135,8 @@
 		0AE32F731A744D96000BEE45 /* CryptoShare */ = {
 			isa = PBXGroup;
 			children = (
+				0A7086C01AA4BB2F00EC654F /* MyDBCManager.h */,
+				0A7086C11AA4BB2F00EC654F /* MyDBCManager.m */,
 				0AE32F9B1A744DA7000BEE45 /* Dropbox */,
 				0AE32F9A1A744D9E000BEE45 /* View Controllers */,
 				0AE32F781A744D96000BEE45 /* AppDelegate.h */,
@@ -156,14 +178,13 @@
 		0AE32F9A1A744D9E000BEE45 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				0A7086B91AA4B7EF00EC654F /* Passwords */,
 				0AE32F7B1A744D96000BEE45 /* DropboxConnectViewController.h */,
 				0AE32F7C1A744D96000BEE45 /* DropboxConnectViewController.m */,
 				0AE32FAB1A744FDF000BEE45 /* MainTableViewController.h */,
 				0AE32FAC1A744FDF000BEE45 /* MainTableViewController.m */,
-				0AA607451A7539B90003D7A4 /* CreatePasswordViewController.h */,
-				0AA607461A7539B90003D7A4 /* CreatePasswordViewController.m */,
-				0AA607521A75C7330003D7A4 /* EnterPasswordViewController.h */,
-				0AA607531A75C7330003D7A4 /* EnterPasswordViewController.m */,
+				0A7086BA1AA4B81000EC654F /* AddItemViewController.h */,
+				0A7086BB1AA4B81000EC654F /* AddItemViewController.m */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -173,6 +194,8 @@
 			children = (
 				0AE32FB81A745BE1000BEE45 /* DBCryptoSession.h */,
 				0AE32FB91A745BE1000BEE45 /* DBCryptoSession.m */,
+				0A7086C31AA4BB7D00EC654F /* DBCJsonStore.h */,
+				0A7086C41AA4BB7D00EC654F /* DBCJsonStore.m */,
 			);
 			path = Dropbox;
 			sourceTree = "<group>";
@@ -292,10 +315,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AE32FAD1A744FDF000BEE45 /* MainTableViewController.m in Sources */,
+				0A7086C21AA4BB2F00EC654F /* MyDBCManager.m in Sources */,
+				0A7086BC1AA4B81000EC654F /* AddItemViewController.m in Sources */,
 				0AE32F7D1A744D96000BEE45 /* DropboxConnectViewController.m in Sources */,
 				0AE32F7A1A744D96000BEE45 /* AppDelegate.m in Sources */,
 				0AA607471A7539B90003D7A4 /* CreatePasswordViewController.m in Sources */,
 				0AA607541A75C7330003D7A4 /* EnterPasswordViewController.m in Sources */,
+				0A7086C51AA4BB7D00EC654F /* DBCJsonStore.m in Sources */,
 				0AE32F771A744D96000BEE45 /* main.m in Sources */,
 				0AE32FBA1A745BE1000BEE45 /* DBCryptoSession.m in Sources */,
 			);
