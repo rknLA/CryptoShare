@@ -69,7 +69,18 @@ static DBCJsonStore *_sharedJsonStore;
 - (NSArray *)keys
 {
     [self refreshLocalCache];
-    return [_localFileCache allKeys];
+    NSArray *keys = [_localFileCache allKeys];
+    keys = [keys sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        uint64_t val1 = floor([obj1 doubleValue] * 1000);
+        uint64_t val2 = floor([obj2 doubleValue] * 1000);
+        if (val1 > val2) {
+            return NSOrderedAscending;
+        } else if (val1 < val2) {
+            return NSOrderedDescending;
+        }
+        return NSOrderedSame;
+    }];
+    return keys;
 }
 
 - (id)objectForKey:(id<NSCopying>)key
